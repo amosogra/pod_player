@@ -86,8 +86,8 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
               PodVideoPlayer(
                 alwaysShowProgressBar: alwaysShowProgressBar,
                 controller: controller,
-                matchFrameAspectRatioToVideo: true,
-                matchVideoAspectRatioToFrame: true,
+                //matchFrameAspectRatioToVideo: true,
+                //matchVideoAspectRatioToFrame: true,
                 podProgressBarConfig: const PodProgressBarConfig(
                   playingBarColor: Colors.purple,
                   circleHandlerColor: Colors.purple,

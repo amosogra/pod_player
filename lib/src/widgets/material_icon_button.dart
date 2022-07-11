@@ -5,7 +5,7 @@ class MaterialIconButton extends StatelessWidget {
     Key? key,
     this.color,
     required this.child,
-    this.radius = 12,
+    this.radius = 8,
     required this.toolTipMesg,
     this.onPressed,
     this.onHover,

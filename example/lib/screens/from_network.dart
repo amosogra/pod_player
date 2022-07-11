@@ -72,8 +72,7 @@ class _PlayVideoFromAssetState extends State<PlayVideoFromNetwork> {
             decoration: const InputDecoration(
               labelText: 'Enter video url',
               floatingLabelBehavior: FloatingLabelBehavior.always,
-              hintText:
-                  'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+              hintText: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
               border: OutlineInputBorder(),
             ),
           ),

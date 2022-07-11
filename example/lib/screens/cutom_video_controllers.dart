@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:example/screens/overlays/mobile_overlay.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -15,8 +16,7 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
   late PodPlayerController controller;
   bool? isVideoPlaying;
   final videoTextFieldCtr = TextEditingController(
-    text:
-        'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
+    text: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
   );
   final vimeoTextFieldCtr = TextEditingController(
     text: '518228118',
@@ -67,32 +67,11 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
   Widget build(BuildContext context) {
     ///
     const sizeH20 = SizedBox(height: 20);
-    final totalHour = controller.currentVideoPosition.inHours == 0
-        ? '0'
-        : '${controller.currentVideoPosition.inHours}:';
-    final totalMinute =
-        controller.currentVideoPosition.toString().split(':')[1];
-    final totalSeconds = (controller.currentVideoPosition -
-            Duration(minutes: controller.currentVideoPosition.inMinutes))
-        .inSeconds
-        .toString()
-        .padLeft(2, '0');
+    final totalHour = controller.currentVideoPosition.inHours == 0 ? '0' : '${controller.currentVideoPosition.inHours}:';
+    final totalMinute = controller.currentVideoPosition.toString().split(':')[1];
+    final totalSeconds = (controller.currentVideoPosition - Duration(minutes: controller.currentVideoPosition.inMinutes)).inSeconds.toString().padLeft(2, '0');
 
-    ///
-    const videoTitle = Padding(
-      padding: kIsWeb
-          ? EdgeInsets.symmetric(vertical: 25, horizontal: 15)
-          : EdgeInsets.only(left: 15),
-      child: Text(
-        'Lorem Ipsum is simply dummy text of the printing and typesetting industry.',
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 18,
-        ),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-    );
+    ///styles
     const textStyle = TextStyle(
       fontSize: 20,
       fontWeight: FontWeight.bold,
@@ -103,13 +82,48 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              sizeH20,
+              //sizeH20,
               PodVideoPlayer(
                 alwaysShowProgressBar: alwaysShowProgressBar,
                 controller: controller,
                 matchFrameAspectRatioToVideo: true,
                 matchVideoAspectRatioToFrame: true,
-                videoTitle: videoTitle,
+                podProgressBarConfig: const PodProgressBarConfig(
+                  playingBarColor: Colors.purple,
+                  circleHandlerColor: Colors.purple,
+                  backgroundColor: Colors.blueGrey,
+                  circleHandlerRadius: 6,
+                  height: 3,
+                ),
+                videoTitle: const Padding(
+                  padding: kIsWeb ? EdgeInsets.symmetric(vertical: 25, horizontal: 15) : EdgeInsets.only(left: 0),
+                  child: Text(
+                    'Going Home Early',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                overlayBuilder: kIsWeb
+                    ? null
+                    : (overlayOptions) {
+                        return AnimatedOpacity(
+                          duration: const Duration(milliseconds: 200),
+                          opacity: overlayOptions.isOverlayVisible ? 1 : 0,
+                          child: Stack(
+                            fit: StackFit.passthrough,
+                            children: [
+                              MobileOverlay(
+                                tag: overlayOptions.podProgresssBar.tag,
+                                onDoubtTap: () {},
+                              ),
+                            ],
+                          ),
+                        );
+                      },
               ),
               Padding(
                 padding: const EdgeInsets.all(12.0),
@@ -149,37 +163,29 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
                     sizeH20,
                     _loadVideoFromYoutube(),
                     sizeH20,
-                    _iconButton('Hide progress bar on overlay hidden',
-                        Icons.hide_source, onPressed: () {
+                    _iconButton('Hide progress bar on overlay hidden', Icons.hide_source, onPressed: () {
                       setState(() {
                         alwaysShowProgressBar = false;
                       });
                     }),
                     sizeH20,
-                    _iconButton('Backward video 5s', Icons.replay_5_rounded,
-                        onPressed: () {
+                    _iconButton('Backward video 5s', Icons.replay_5_rounded, onPressed: () {
                       controller.doubleTapVideoBackward(5);
                     }),
                     sizeH20,
-                    _iconButton('Forward video 5s', Icons.forward_5_rounded,
-                        onPressed: () {
+                    _iconButton('Forward video 5s', Icons.forward_5_rounded, onPressed: () {
                       controller.doubleTapVideoForward(5);
                     }),
                     sizeH20,
-                    _iconButton('Video Jump to 01:00 minute',
-                        Icons.fast_forward_rounded, onPressed: () {
+                    _iconButton('Video Jump to 01:00 minute', Icons.fast_forward_rounded, onPressed: () {
                       controller.videoSeekTo(const Duration(minutes: 1));
                     }),
                     sizeH20,
-                    _iconButton('Enable full screen', Icons.fullscreen,
-                        onPressed: () {
+                    _iconButton('Enable full screen', Icons.fullscreen, onPressed: () {
                       controller.enableFullScreen();
                     }),
                     sizeH20,
-                    _iconButton(
-                        controller.isMute ? 'UnMute video' : 'mute video',
-                        controller.isMute ? Icons.volume_up : Icons.volume_off,
-                        onPressed: () {
+                    _iconButton(controller.isMute ? 'UnMute video' : 'mute video', controller.isMute ? Icons.volume_up : Icons.volume_off, onPressed: () {
                       controller.toggleVolume();
                     }),
                     sizeH20,
@@ -245,8 +251,20 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
             try {
               snackBar('Loading....');
               FocusScope.of(context).unfocus();
+              var vimeoId = vimeoTextFieldCtr.text;
+              if (vimeoId.contains("https://")) {
+                vimeoId = vimeoId.split("vimeo.com/").last;
+                if (vimeoId.contains("video/")) {
+                  vimeoId = vimeoId.split("video/").last;
+                  if (vimeoId.contains("/")) {
+                    vimeoId = vimeoId.split("/").first;
+                  }
+                } else {
+                  vimeoId = vimeoId.split("/").first;
+                }
+              }
               await controller.changeVideo(
-                playVideoFrom: PlayVideoFrom.vimeo(vimeoTextFieldCtr.text),
+                playVideoFrom: PlayVideoFrom.vimeo(vimeoId),
               );
               controller.addListener(_listner);
               controller.onVideoQualityChanged(
@@ -258,8 +276,7 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
               if (!mounted) return;
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
             } catch (e) {
-              snackBar(
-                  "Unable to load,${kIsWeb ? 'Please enable CORS in web' : ''}  \n$e");
+              snackBar("Unable to load,${kIsWeb ? 'Please enable CORS in web' : ''}  \n$e");
             }
           },
           child: const Text('Load Video'),
@@ -304,8 +321,7 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
               if (!mounted) return;
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
             } catch (e) {
-              snackBar(
-                  "Unable to load,${kIsWeb ? 'Please enable CORS in web' : ''}  \n$e");
+              snackBar("Unable to load,${kIsWeb ? 'Please enable CORS in web' : ''}  \n$e");
             }
           },
           child: const Text('Load Video'),
@@ -363,13 +379,8 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
       );
   }
 
-  ElevatedButton _iconButton(String text, IconData icon,
-      {void Function()? onPressed}) {
+  ElevatedButton _iconButton(String text, IconData icon, {void Function()? onPressed}) {
     return ElevatedButton.icon(
-        onPressed: onPressed ?? () {},
-        style: ElevatedButton.styleFrom(
-            fixedSize: const Size.fromWidth(double.maxFinite)),
-        icon: Icon(icon),
-        label: Text(text));
+        onPressed: onPressed ?? () {}, style: ElevatedButton.styleFrom(fixedSize: const Size.fromWidth(double.maxFinite)), icon: Icon(icon), label: Text(text));
   }
 }

@@ -98,7 +98,7 @@ class _MobileOverlayState extends State<MobileOverlay> with GetItStateMixin {
                     get<PodManager>().setShowSidePanelStateCommand.call(!showSidePanel);
                   },
                   child: Icon(
-                    podCtr.showSidePanel ? Icons.video_library : Icons.video_library_outlined,
+                    showSidePanel ? Icons.video_library : Icons.video_library_outlined,
                   ),
                 ),
               MaterialIconButton(

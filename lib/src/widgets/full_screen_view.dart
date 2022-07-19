@@ -85,8 +85,12 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
                   if (showSidePanel)
                     Expanded(
                       flex: 3,
-                      child: _podCtr.sidePanelBuilder?.call(_podCtr) ?? const SizedBox(),
-                    )
+                      child: AnimatedSwitcher(
+                        duration: const Duration(seconds: 2),
+                        reverseDuration: const Duration(seconds: 3),
+                        child: _podCtr.sidePanelBuilder?.call(_podCtr) ?? const SizedBox(),
+                      ),
+                    ),
                 ],
               ),
             );

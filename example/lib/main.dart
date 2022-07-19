@@ -2,6 +2,7 @@ import 'package:example/screens/from_asset.dart';
 import 'package:example/screens/from_network.dart';
 import 'package:example/screens/from_network_urls.dart';
 import 'package:example/screens/from_youtube.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pod_player/pod_player.dart';
 
@@ -9,7 +10,8 @@ import 'screens/cutom_video_controllers.dart';
 import 'screens/from_vimeo_id.dart';
 
 void main() {
-  PodVideoPlayer.enableLogs = true;
+  registerPodManager();
+  PodVideoPlayer.enableLogs = kDebugMode;
   runApp(const MyApp());
 }
 
@@ -25,8 +27,7 @@ class MyApp extends StatelessWidget {
         '/fromYoutube': (context) => const PlayVideoFromYoutube(),
         '/fromAsset': (context) => const PlayVideoFromAsset(),
         '/fromNetwork': (context) => const PlayVideoFromNetwork(),
-        '/fromNetworkQualityUrls': (context) =>
-            const PlayVideoFromNetworkQualityUrls(),
+        '/fromNetworkQualityUrls': (context) => const PlayVideoFromNetworkQualityUrls(),
         '/customVideo': (context) => const CustomVideoControlls(),
       },
       home: const MainPage(),
@@ -60,8 +61,7 @@ class _MainPageState extends State<MainPage> {
             ),
             _button(
               'Play video from Network quality urls',
-              onPressed: () =>
-                  Navigator.of(context).pushNamed('/fromNetworkQualityUrls'),
+              onPressed: () => Navigator.of(context).pushNamed('/fromNetworkQualityUrls'),
             ),
             _button(
               'Play video from Asset (with custom labels)',

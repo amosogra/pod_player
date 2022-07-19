@@ -107,6 +107,20 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                showSidePanelButton: true,
+                sidePanelBuilder: (podController) => ListView.builder(
+                  itemCount: 20,
+                  physics: const BouncingScrollPhysics(),
+                  //shrinkWrap: true,
+                  itemBuilder: (context, index) => Container(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    height: 50,
+                    color: Colors.orange,
+                    child: Center(
+                      child: Text("Item $index"),
+                    ),
+                  ),
+                ),
                 overlayBuilder: kIsWeb
                     ? null
                     : (overlayOptions) {

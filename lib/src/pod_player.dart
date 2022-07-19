@@ -3,8 +3,6 @@ import 'dart:ui';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:universal_html/html.dart' as _html;
 
 import '../pod_player.dart';
@@ -24,12 +22,15 @@ class PodVideoPlayer extends StatefulWidget {
   final PodPlayerController controller;
   final double frameAspectRatio;
   final double videoAspectRatio;
+  final bool showSidePanel;
+  final bool showSidePanelButton;
   final bool alwaysShowProgressBar;
   final bool matchVideoAspectRatioToFrame;
   final bool matchFrameAspectRatioToVideo;
   final PodProgressBarConfig podProgressBarConfig;
   final PodPlayerLabels podPlayerLabels;
   final Widget Function(OverLayOptions options)? overlayBuilder;
+  final Widget Function(PodGetXVideoController podGetController)? sidePanelBuilder;
   final Widget Function()? onVideoError;
   final Widget? videoTitle;
   final Color? backgroundColor;
@@ -39,10 +40,13 @@ class PodVideoPlayer extends StatefulWidget {
     required this.controller,
     this.frameAspectRatio = 16 / 9,
     this.videoAspectRatio = 16 / 9,
+    this.showSidePanel = false,
+    this.showSidePanelButton = false,
     this.alwaysShowProgressBar = true,
     this.podProgressBarConfig = const PodProgressBarConfig(),
     this.podPlayerLabels = const PodPlayerLabels(),
     this.overlayBuilder,
+    this.sidePanelBuilder,
     this.videoTitle,
     this.matchVideoAspectRatioToFrame = false,
     this.matchFrameAspectRatioToVideo = false,
@@ -61,9 +65,12 @@ class PodVideoPlayer extends StatefulWidget {
 
       ///add to ui controller
       ..podPlayerLabels = podPlayerLabels
+      ..showSidePanel = showSidePanel
+      ..showSidePanelButton = showSidePanelButton
       ..alwaysShowProgressBar = alwaysShowProgressBar
       ..podProgressBarConfig = podProgressBarConfig
       ..overlayBuilder = overlayBuilder
+      ..sidePanelBuilder = sidePanelBuilder
       ..videoTitle = videoTitle
       ..videoThumbnail = videoThumbnail;
   }
@@ -72,8 +79,7 @@ class PodVideoPlayer extends StatefulWidget {
   State<PodVideoPlayer> createState() => _PodVideoPlayerState();
 }
 
-class _PodVideoPlayerState extends State<PodVideoPlayer>
-    with TickerProviderStateMixin {
+class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStateMixin {
   late PodGetXVideoController _podCtr;
   // late String tag;
   @override
@@ -154,9 +160,7 @@ class _PodVideoPlayerState extends State<PodVideoPlayer>
     return GetBuilder<PodGetXVideoController>(
       tag: widget.controller.getTag,
       builder: (_) {
-        _frameAspectRatio = widget.matchFrameAspectRatioToVideo
-            ? _podCtr.videoCtr?.value.aspectRatio ?? widget.frameAspectRatio
-            : widget.frameAspectRatio;
+        _frameAspectRatio = widget.matchFrameAspectRatioToVideo ? _podCtr.videoCtr?.value.aspectRatio ?? widget.frameAspectRatio : widget.frameAspectRatio;
         return Center(
           child: ColoredBox(
             color: widget.backgroundColor ?? Colors.black,
@@ -219,9 +223,7 @@ class _PodVideoPlayerState extends State<PodVideoPlayer>
   }
 
   Widget _buildPlayer() {
-    final _videoAspectRatio = widget.matchVideoAspectRatioToFrame
-        ? _podCtr.videoCtr?.value.aspectRatio ?? widget.videoAspectRatio
-        : widget.videoAspectRatio;
+    final _videoAspectRatio = widget.matchVideoAspectRatioToFrame ? _podCtr.videoCtr?.value.aspectRatio ?? widget.videoAspectRatio : widget.videoAspectRatio;
     if (kIsWeb) {
       return GetBuilder<PodGetXVideoController>(
         tag: widget.controller.getTag,

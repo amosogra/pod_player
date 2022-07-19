@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 import 'package:universal_html/html.dart' as _html;
 import 'package:wakelock/wakelock.dart';
 
 import '../../pod_player.dart';
 import '../utils/logger.dart';
 import '../utils/video_apis.dart';
-import 'pod_getx_video_controller.dart';
 
 class PodPlayerController {
   late PodGetXVideoController _ctr;
@@ -78,6 +76,9 @@ class PodPlayerController {
 
   /// returns true if video is in fullscreen mode
   bool get isFullScreen => _ctr.isFullScreen;
+
+  /// returns true if Side Panel should be shown
+  bool get showSidePanel => _ctr.showSidePanel;
 
   bool get isMute => _ctr.isMute;
 

@@ -1,8 +1,8 @@
 part of 'package:pod_player/src/pod_player.dart';
 
-class FullScreenView extends StatefulWidget {
+class FullScreenView extends StatefulWidget with GetItStatefulWidgetMixin {
   final String tag;
-  const FullScreenView({
+  FullScreenView({
     Key? key,
     required this.tag,
   }) : super(key: key);
@@ -11,8 +11,7 @@ class FullScreenView extends StatefulWidget {
   State<FullScreenView> createState() => _FullScreenViewState();
 }
 
-class _FullScreenViewState extends State<FullScreenView>
-    with TickerProviderStateMixin {
+class _FullScreenViewState extends State<FullScreenView> with TickerProviderStateMixin, GetItStateMixin {
   late PodGetXVideoController _podCtr;
   @override
   void initState() {
@@ -32,6 +31,7 @@ class _FullScreenViewState extends State<FullScreenView>
 
   @override
   Widget build(BuildContext context) {
+    final showSidePanel = watchX((PodManager x) => x.setShowSidePanelStateCommand);
     const circularProgressIndicator = CircularProgressIndicator(
       backgroundColor: Colors.black87,
       color: Colors.white,
@@ -53,27 +53,44 @@ class _FullScreenViewState extends State<FullScreenView>
         backgroundColor: Colors.black,
         body: GetBuilder<PodGetXVideoController>(
           tag: widget.tag,
-          builder: (_podCtr) => Center(
-            child: ColoredBox(
-              color: Colors.black,
-              child: SizedBox(
-                height: MediaQuery.of(context).size.height,
-                width: MediaQuery.of(context).size.width,
-                child: Center(
-                  child: _podCtr.videoCtr == null
-                      ? circularProgressIndicator
-                      : _podCtr.videoCtr!.value.isInitialized
-                          ? _PodCoreVideoPlayer(
-                              tag: widget.tag,
-                              videoPlayerCtr: _podCtr.videoCtr!,
-                              videoAspectRatio:
-                                  _podCtr.videoCtr?.value.aspectRatio ?? 16 / 9,
-                            )
-                          : circularProgressIndicator,
-                ),
+          id: 'side-panel',
+          builder: (_podCtr) {
+            if (kDebugMode) {
+              print('************setShowSidePanelStateCommand=$showSidePanel************');
+            }
+            return Center(
+              child: Row(
+                children: [
+                  Expanded(
+                    flex: showSidePanel ? 7 : 1,
+                    child: ColoredBox(
+                      color: Colors.black,
+                      child: SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        width: MediaQuery.of(context).size.width,
+                        child: Center(
+                          child: _podCtr.videoCtr == null
+                              ? circularProgressIndicator
+                              : _podCtr.videoCtr!.value.isInitialized
+                                  ? _PodCoreVideoPlayer(
+                                      tag: widget.tag,
+                                      videoPlayerCtr: _podCtr.videoCtr!,
+                                      videoAspectRatio: _podCtr.videoCtr?.value.aspectRatio ?? 16 / 9,
+                                    )
+                                  : circularProgressIndicator,
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (showSidePanel)
+                    Expanded(
+                      flex: 3,
+                      child: _podCtr.sidePanelBuilder?.call(_podCtr) ?? const SizedBox(),
+                    )
+                ],
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

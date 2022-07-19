@@ -8,11 +8,11 @@ import 'package:example/screens/overlays/widget/video_gesture_detector.dart';
 import 'package:flutter/material.dart';
 import 'package:pod_player/pod_player.dart';
 
-class MobileOverlay extends StatefulWidget {
+class MobileOverlay extends StatefulWidget with GetItStatefulWidgetMixin {
   final String tag;
   final VoidCallback? onDoubtTap;
 
-  const MobileOverlay({
+  MobileOverlay({
     Key? key,
     this.onDoubtTap,
     required this.tag,
@@ -22,7 +22,7 @@ class MobileOverlay extends StatefulWidget {
   State<MobileOverlay> createState() => _MobileOverlayState();
 }
 
-class _MobileOverlayState extends State<MobileOverlay> {
+class _MobileOverlayState extends State<MobileOverlay> with GetItStateMixin {
   bool toggleBookmark = false;
 
   @override
@@ -30,6 +30,7 @@ class _MobileOverlayState extends State<MobileOverlay> {
     const overlayColor = Colors.black38;
     const itemColor = Colors.white;
     final podCtr = Get.find<PodGetXVideoController>(tag: widget.tag);
+    final showSidePanel = watchX((PodManager x) => x.setShowSidePanelStateCommand);
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -89,6 +90,17 @@ class _MobileOverlayState extends State<MobileOverlay> {
                   ),
                 ),
               ),
+              if (podCtr.showSidePanelButton && podCtr.isFullScreen)
+                MaterialIconButton(
+                  toolTipMesg: "Toggle Side Panel",
+                  color: itemColor,
+                  onPressed: () {
+                    get<PodManager>().setShowSidePanelStateCommand.call(!showSidePanel);
+                  },
+                  child: Icon(
+                    podCtr.showSidePanel ? Icons.video_library : Icons.video_library_outlined,
+                  ),
+                ),
               MaterialIconButton(
                 toolTipMesg: podCtr.podPlayerLabels.settings,
                 color: itemColor,

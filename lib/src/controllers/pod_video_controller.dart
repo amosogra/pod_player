@@ -7,6 +7,7 @@ class _PodVideoController extends _PodBaseController {
   bool isOverlayVisible = true;
   bool isLooping = false;
   bool isFullScreen = false;
+  bool showSidePanel = false;
   bool isvideoPlaying = false;
 
   List<String> videoPlaybackSpeeds = [
@@ -159,6 +160,15 @@ class _PodVideoController extends _PodBaseController {
     update(['update-all']);
   }
 
+  void openSidePanel(bool show) {
+    showSidePanel = show;
+    update();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      update(['side-panel']);
+      update(['update-all']);
+    });
+  }
+
   void enableFullScreen(String tag) {
     podLog('-full-screen-enable-entred');
     if (!isFullScreen) {
@@ -188,10 +198,7 @@ class _PodVideoController extends _PodBaseController {
   }) {
     podLog('-full-screen-disable-entred');
     if (isFullScreen) {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.portraitUp,
-        DeviceOrientation.portraitDown
-      ]); //for ios
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]); //for ios
       SystemChrome.setPreferredOrientations(DeviceOrientation.values);
       SystemChrome.setEnabledSystemUIMode(
         SystemUiMode.manual,
@@ -221,8 +228,7 @@ class _PodVideoController extends _PodBaseController {
             tag: tag,
           ),
           reverseTransitionDuration: const Duration(milliseconds: 400),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) =>
-              FadeTransition(
+          transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(
             opacity: animation,
             child: child,
           ),
@@ -235,10 +241,7 @@ class _PodVideoController extends _PodBaseController {
   String calculateVideoDuration(Duration _duration) {
     final _totalHour = _duration.inHours == 0 ? '' : '${_duration.inHours}:';
     final _totalMinute = _duration.toString().split(':')[1];
-    final _totalSeconds = (_duration - Duration(minutes: _duration.inMinutes))
-        .inSeconds
-        .toString()
-        .padLeft(2, '0');
+    final _totalSeconds = (_duration - Duration(minutes: _duration.inMinutes)).inSeconds.toString().padLeft(2, '0');
     final String videoLength = '$_totalHour$_totalMinute:$_totalSeconds';
     return videoLength;
   }

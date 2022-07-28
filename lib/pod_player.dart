@@ -1,6 +1,7 @@
 library pod_player;
 
 export 'package:get/get.dart';
+export 'package:get_it/get_it.dart';
 export 'package:get_it_mixin/get_it_mixin.dart';
 export 'package:lottie/src/lottie.dart';
 export 'package:video_player/video_player.dart';

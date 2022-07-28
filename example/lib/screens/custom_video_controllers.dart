@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:example/screens/overlays/mobile_overlay.dart';
+import 'package:example/screens/vimeo/helper.dart';
 import 'package:pod_player/pod_player.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -265,19 +266,48 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
             try {
               snackBar('Loading....');
               FocusScope.of(context).unfocus();
-              var vimeoId = vimeoTextFieldCtr.text;
-              if (vimeoId.contains("https://")) {
-                vimeoId = vimeoId.split("vimeo.com/").last;
-                if (vimeoId.contains("video/")) {
-                  vimeoId = vimeoId.split("video/").last;
-                  if (vimeoId.contains("/")) {
-                    vimeoId = vimeoId.split("/").first;
+
+              //for live events
+              getVimeoVideoConfigFromUrl(vimeoTextFieldCtr.text).then((vimeo) async {
+                if (vimeo != null && vimeo.video?.liveEvent != null) {
+                  var defaultItemUrl = vimeo.request?.files?.hls?.defaultCdn ?? 'akamai_live';
+                  var hlsUrl = vimeo.request?.files?.hls?.cdns?.toJson() ?? {};
+                  if (hlsUrl.isNotEmpty) {
+                    var vimeoLiveUrl = hlsUrl[defaultItemUrl] ?? hlsUrl['fastly_live'] ?? hlsUrl['fastly_skyfire'] ?? hlsUrl['akfire_interconnect_quic'] ?? '';
+
+                    await controller.changeVideo(
+                      playVideoFrom: PlayVideoFrom.network(vimeoLiveUrl['url']),
+                    );
+                    controller.enableFullScreen();
+                    controller.addListener(_listner);
+                    controller.onVideoQualityChanged(
+                      () {
+                        log('Vimeo video quality changed');
+                        controller.addListener(_listner);
+                      },
+                    );
+                    if (!mounted) return;
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    return;
                   }
-                } else {
-                  vimeoId = vimeoId.split("/").first;
                 }
-              }
-              await controller.changeVideo(
+
+                var vimeoId = convertUrlToId(vimeoTextFieldCtr.text);
+                await controller.changeVideo(
+                  playVideoFrom: PlayVideoFrom.vimeo(vimeoId ?? ''),
+                );
+                controller.addListener(_listner);
+                controller.onVideoQualityChanged(
+                  () {
+                    log('Vimeo video quality changed');
+                    controller.addListener(_listner);
+                  },
+                );
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              });
+
+              /* await controller.changeVideo(
                 playVideoFrom: PlayVideoFrom.vimeo(vimeoId),
               );
               controller.addListener(_listner);
@@ -288,7 +318,7 @@ class _CustomVideoControllsState extends State<CustomVideoControlls> {
                 },
               );
               if (!mounted) return;
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
+              ScaffoldMessenger.of(context).hideCurrentSnackBar(); */
             } catch (e) {
               snackBar("Unable to load,${kIsWeb ? 'Please enable CORS in web' : ''}  \n$e");
             }

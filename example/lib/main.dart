@@ -6,7 +6,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:pod_player/pod_player.dart';
 
-import 'screens/cutom_video_controllers.dart';
+import 'screens/custom_video_controllers.dart';
 import 'screens/from_vimeo_id.dart';
 
 void main() {

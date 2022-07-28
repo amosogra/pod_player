@@ -1,6 +1,7 @@
 part of 'pod_getx_video_controller.dart';
 
 class _PodUiController extends _PodGesturesController {
+  bool isLive = false;
   bool showSidePanelButton = false;
   bool alwaysShowProgressBar = true;
   PodProgressBarConfig podProgressBarConfig = const PodProgressBarConfig();

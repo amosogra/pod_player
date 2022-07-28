@@ -23,6 +23,7 @@ class PodVideoPlayer extends StatefulWidget {
   final double frameAspectRatio;
   final double videoAspectRatio;
   final bool showSidePanel;
+  final bool isLive;
   final bool showSidePanelButton;
   final bool alwaysShowProgressBar;
   final bool matchVideoAspectRatioToFrame;
@@ -41,6 +42,7 @@ class PodVideoPlayer extends StatefulWidget {
     this.frameAspectRatio = 16 / 9,
     this.videoAspectRatio = 16 / 9,
     this.showSidePanel = false,
+    this.isLive = false,
     this.showSidePanelButton = false,
     this.alwaysShowProgressBar = true,
     this.podProgressBarConfig = const PodProgressBarConfig(),
@@ -65,6 +67,7 @@ class PodVideoPlayer extends StatefulWidget {
 
       ///add to ui controller
       ..podPlayerLabels = podPlayerLabels
+      ..isLive = isLive
       ..showSidePanel = showSidePanel
       ..showSidePanelButton = showSidePanelButton
       ..alwaysShowProgressBar = alwaysShowProgressBar

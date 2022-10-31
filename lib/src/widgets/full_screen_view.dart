@@ -72,11 +72,16 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
                           child: _podCtr.videoCtr == null
                               ? circularProgressIndicator
                               : _podCtr.videoCtr!.value.isInitialized
-                                  ? _PodCoreVideoPlayer(
-                                      tag: widget.tag,
-                                      videoPlayerCtr: _podCtr.videoCtr!,
-                                      videoAspectRatio: _podCtr.videoCtr?.value.aspectRatio ?? 16 / 9,
-                                    )
+                                  ? Stack(
+                                    children: [
+                                      _PodCoreVideoPlayer(
+                                          tag: widget.tag,
+                                          videoPlayerCtr: _podCtr.videoCtr!,
+                                          videoAspectRatio: _podCtr.videoCtr?.value.aspectRatio ?? 16 / 9,
+                                        ),
+                                        _podCtr.logoBuilder?.call(_podCtr) ?? const SizedBox()
+                                    ],
+                                  )
                                   : circularProgressIndicator,
                         ),
                       ),

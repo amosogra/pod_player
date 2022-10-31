@@ -31,6 +31,7 @@ class PodVideoPlayer extends StatefulWidget {
   final PodProgressBarConfig podProgressBarConfig;
   final PodPlayerLabels podPlayerLabels;
   final Widget Function(OverLayOptions options)? overlayBuilder;
+  final Positioned Function(PodGetXVideoController podGetController)? logoBuilder;
   final Widget Function(PodGetXVideoController podGetController)? sidePanelBuilder;
   final Widget Function()? onVideoError;
   final Widget? videoTitle;
@@ -47,6 +48,7 @@ class PodVideoPlayer extends StatefulWidget {
     this.alwaysShowProgressBar = true,
     this.podProgressBarConfig = const PodProgressBarConfig(),
     this.podPlayerLabels = const PodPlayerLabels(),
+    this.logoBuilder,
     this.overlayBuilder,
     this.sidePanelBuilder,
     this.videoTitle,
@@ -72,6 +74,7 @@ class PodVideoPlayer extends StatefulWidget {
       ..showSidePanelButton = showSidePanelButton
       ..alwaysShowProgressBar = alwaysShowProgressBar
       ..podProgressBarConfig = podProgressBarConfig
+      ..logoBuilder = logoBuilder
       ..overlayBuilder = overlayBuilder
       ..sidePanelBuilder = sidePanelBuilder
       ..videoTitle = videoTitle

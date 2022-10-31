@@ -7,6 +7,7 @@ class _PodUiController extends _PodGesturesController {
   PodProgressBarConfig podProgressBarConfig = const PodProgressBarConfig();
   Widget Function(OverLayOptions options)? overlayBuilder;
   Widget Function(PodGetXVideoController podGetController)? sidePanelBuilder;
+  Positioned Function(PodGetXVideoController podGetController)? logoBuilder;
   Widget? videoTitle;
   DecorationImage? videoThumbnail;
 

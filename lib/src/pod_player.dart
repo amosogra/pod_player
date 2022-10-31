@@ -163,39 +163,44 @@ class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStat
         ),
       ),
     );
-    return GetBuilder<PodGetXVideoController>(
-      tag: widget.controller.getTag,
-      builder: (_) {
-        _frameAspectRatio = widget.matchFrameAspectRatioToVideo ? _podCtr.videoCtr?.value.aspectRatio ?? widget.frameAspectRatio : widget.frameAspectRatio;
-        return Center(
-          child: ColoredBox(
-            color: widget.backgroundColor ?? Colors.black,
-            child: GetBuilder<PodGetXVideoController>(
-              tag: widget.controller.getTag,
-              id: 'errorState',
-              builder: (_podCtr) {
-                /// Check if has any error
-                if (_podCtr.podVideoState == PodVideoState.error) {
-                  if (widget.onVideoError != null) {
-                    return widget.onVideoError!();
-                  }
-                  return _videoErrorWidget;
-                }
-                return AspectRatio(
-                  aspectRatio: _frameAspectRatio,
-                  child: Center(
-                    child: _podCtr.videoCtr == null
-                        ? circularProgressIndicator
-                        : _podCtr.videoCtr!.value.isInitialized
-                            ? _buildPlayer()
-                            : circularProgressIndicator,
-                  ),
-                );
-              },
-            ),
-          ),
-        );
-      },
+    return Stack(
+      children: [
+        GetBuilder<PodGetXVideoController>(
+          tag: widget.controller.getTag,
+          builder: (_) {
+            _frameAspectRatio = widget.matchFrameAspectRatioToVideo ? _podCtr.videoCtr?.value.aspectRatio ?? widget.frameAspectRatio : widget.frameAspectRatio;
+            return Center(
+              child: ColoredBox(
+                color: widget.backgroundColor ?? Colors.black,
+                child: GetBuilder<PodGetXVideoController>(
+                  tag: widget.controller.getTag,
+                  id: 'errorState',
+                  builder: (_podCtr) {
+                    /// Check if has any error
+                    if (_podCtr.podVideoState == PodVideoState.error) {
+                      if (widget.onVideoError != null) {
+                        return widget.onVideoError!();
+                      }
+                      return _videoErrorWidget;
+                    }
+                    return AspectRatio(
+                      aspectRatio: _frameAspectRatio,
+                      child: Center(
+                        child: _podCtr.videoCtr == null
+                            ? circularProgressIndicator
+                            : _podCtr.videoCtr!.value.isInitialized
+                                ? _buildPlayer()
+                                : circularProgressIndicator,
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+        _podCtr.logoBuilder?.call(_podCtr) ?? const SizedBox()
+      ],
     );
   }
 

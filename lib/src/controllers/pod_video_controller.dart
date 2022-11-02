@@ -5,6 +5,7 @@ class _PodVideoController extends _PodBaseController {
   Timer? showOverlayTimer1;
 
   bool isOverlayVisible = true;
+  bool isPlayNextOverlayVisible = false;
   bool isLooping = false;
   bool isFullScreen = false;
   bool showSidePanel = false;
@@ -132,6 +133,19 @@ class _PodVideoController extends _PodBaseController {
           update(['update-all']);
         }
       });
+    }
+  }
+
+  ///next overlay above video contrller
+  void togglePlayNextOverlay() {
+    if (!isPlayNextOverlayVisible) {
+      isPlayNextOverlayVisible = true;
+      update(['next-overlay']);
+      update(['update-all']);
+    } else {
+      isPlayNextOverlayVisible = false;
+      update(['next-overlay']);
+      update(['update-all']);
     }
   }
 

@@ -30,6 +30,7 @@ class PodVideoPlayer extends StatefulWidget {
   final bool matchFrameAspectRatioToVideo;
   final PodProgressBarConfig podProgressBarConfig;
   final PodPlayerLabels podPlayerLabels;
+  final Widget Function()? playNextOverlayBuilder;
   final Widget Function(OverLayOptions options)? overlayBuilder;
   final Positioned Function(PodGetXVideoController podGetController)? logoBuilder;
   final Widget Function(PodGetXVideoController podGetController)? sidePanelBuilder;
@@ -50,6 +51,7 @@ class PodVideoPlayer extends StatefulWidget {
     this.podPlayerLabels = const PodPlayerLabels(),
     this.logoBuilder,
     this.overlayBuilder,
+    this.playNextOverlayBuilder,
     this.sidePanelBuilder,
     this.videoTitle,
     this.matchVideoAspectRatioToFrame = false,
@@ -76,6 +78,7 @@ class PodVideoPlayer extends StatefulWidget {
       ..podProgressBarConfig = podProgressBarConfig
       ..logoBuilder = logoBuilder
       ..overlayBuilder = overlayBuilder
+      ..playNextOverlayBuilder = playNextOverlayBuilder
       ..sidePanelBuilder = sidePanelBuilder
       ..videoTitle = videoTitle
       ..videoThumbnail = videoThumbnail;
@@ -167,6 +170,7 @@ class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStat
       children: [
         GetBuilder<PodGetXVideoController>(
           tag: widget.controller.getTag,
+          id: 'next-overlay',
           builder: (_) {
             _frameAspectRatio = widget.matchFrameAspectRatioToVideo ? _podCtr.videoCtr?.value.aspectRatio ?? widget.frameAspectRatio : widget.frameAspectRatio;
             return Center(
@@ -188,9 +192,11 @@ class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStat
                       child: Center(
                         child: _podCtr.videoCtr == null
                             ? circularProgressIndicator
-                            : _podCtr.videoCtr!.value.isInitialized
-                                ? _buildPlayer()
-                                : circularProgressIndicator,
+                            : _podCtr.isPlayNextOverlayVisible
+                                ? _podCtr.playNextOverlayBuilder?.call() ?? circularProgressIndicator
+                                : _podCtr.videoCtr!.value.isInitialized
+                                    ? _buildPlayer()
+                                    : circularProgressIndicator,
                       ),
                     );
                   },

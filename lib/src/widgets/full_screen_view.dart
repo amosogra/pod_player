@@ -72,7 +72,7 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
                           child: _podCtr.videoCtr == null
                               ? circularProgressIndicator
                               : _podCtr.isPlayNextOverlayVisible
-                                  ? _podCtr.playNextOverlayBuilder?.call(_podCtr.isPlayNextOverlayVisible ? "Visible" : "Invisible") ?? circularProgressIndicator
+                                  ? _podCtr.playNextOverlayBuilder?.call(_podCtr.isPlayNextOverlayVisible ? "Visible(FULL)" : "Invisible(FULL)") ?? circularProgressIndicator
                                   : _podCtr.videoCtr!.value.isInitialized
                                       ? Stack(
                                           children: [

@@ -5,7 +5,7 @@ class _PodUiController extends _PodGesturesController {
   bool showSidePanelButton = false;
   bool alwaysShowProgressBar = true;
   PodProgressBarConfig podProgressBarConfig = const PodProgressBarConfig();
-  Widget Function()? playNextOverlayBuilder;
+  Widget Function(String?)? playNextOverlayBuilder;
   Widget Function(OverLayOptions options)? overlayBuilder;
   Widget Function(PodGetXVideoController podGetController)? sidePanelBuilder;
   Positioned Function(PodGetXVideoController podGetController)? logoBuilder;

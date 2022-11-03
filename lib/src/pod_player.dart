@@ -30,7 +30,7 @@ class PodVideoPlayer extends StatefulWidget {
   final bool matchFrameAspectRatioToVideo;
   final PodProgressBarConfig podProgressBarConfig;
   final PodPlayerLabels podPlayerLabels;
-  final Widget Function()? playNextOverlayBuilder;
+  final Widget Function(String?)? playNextOverlayBuilder;
   final Widget Function(OverLayOptions options)? overlayBuilder;
   final Positioned Function(PodGetXVideoController podGetController)? logoBuilder;
   final Widget Function(PodGetXVideoController podGetController)? sidePanelBuilder;
@@ -192,8 +192,8 @@ class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStat
                       child: Center(
                         child: _podCtr.videoCtr == null
                             ? circularProgressIndicator
-                            : _podCtr.isPlayNextOverlayVisible
-                                ? _podCtr.playNextOverlayBuilder?.call() ?? circularProgressIndicator
+                            : _.isPlayNextOverlayVisible
+                                ? _.playNextOverlayBuilder?.call(_.isPlayNextOverlayVisible ? "Visible" : "Invisible") ?? circularProgressIndicator
                                 : _podCtr.videoCtr!.value.isInitialized
                                     ? _buildPlayer()
                                     : circularProgressIndicator,

@@ -53,7 +53,7 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
         backgroundColor: Colors.black,
         body: GetBuilder<PodGetXVideoController>(
           tag: widget.tag,
-          id: 'side-panel',
+          id: 'next-overlay',
           builder: (_podCtr) {
             if (kDebugMode) {
               print('************setShowSidePanelStateCommand=$showSidePanel************');

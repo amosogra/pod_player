@@ -51,9 +51,7 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
       },
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: _podCtr.isPlayNextOverlayVisible
-            ? _podCtr.playNextOverlayBuilder?.call(_podCtr.isPlayNextOverlayVisible ? "Visible" : "Invisible") ?? circularProgressIndicator
-            : GetBuilder<PodGetXVideoController>(
+        body: GetBuilder<PodGetXVideoController>(
           tag: widget.tag,
           id: 'side-panel',
           builder: (_podCtr) {
@@ -73,18 +71,20 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
                         child: Center(
                           child: _podCtr.videoCtr == null
                               ? circularProgressIndicator
-                              : _podCtr.videoCtr!.value.isInitialized
-                                  ? Stack(
-                                    children: [
-                                      _PodCoreVideoPlayer(
-                                          tag: widget.tag,
-                                          videoPlayerCtr: _podCtr.videoCtr!,
-                                          videoAspectRatio: _podCtr.videoCtr?.value.aspectRatio ?? 16 / 9,
-                                        ),
-                                        _podCtr.logoBuilder?.call(_podCtr) ?? const SizedBox()
-                                    ],
-                                  )
-                                  : circularProgressIndicator,
+                              : _podCtr.isPlayNextOverlayVisible
+                                  ? _podCtr.playNextOverlayBuilder?.call(_podCtr.isPlayNextOverlayVisible ? "Visible" : "Invisible") ?? circularProgressIndicator
+                                  : _podCtr.videoCtr!.value.isInitialized
+                                      ? Stack(
+                                          children: [
+                                            _PodCoreVideoPlayer(
+                                              tag: widget.tag,
+                                              videoPlayerCtr: _podCtr.videoCtr!,
+                                              videoAspectRatio: _podCtr.videoCtr?.value.aspectRatio ?? 16 / 9,
+                                            ),
+                                            _podCtr.logoBuilder?.call(_podCtr) ?? const SizedBox()
+                                          ],
+                                        )
+                                      : circularProgressIndicator,
                         ),
                       ),
                     ),

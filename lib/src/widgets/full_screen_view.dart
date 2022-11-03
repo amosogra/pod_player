@@ -51,7 +51,9 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
       },
       child: Scaffold(
         backgroundColor: Colors.black,
-        body: GetBuilder<PodGetXVideoController>(
+        body: _podCtr.isPlayNextOverlayVisible
+            ? _podCtr.playNextOverlayBuilder?.call(_podCtr.isPlayNextOverlayVisible ? "Visible" : "Invisible") ?? circularProgressIndicator
+            : GetBuilder<PodGetXVideoController>(
           tag: widget.tag,
           id: 'side-panel',
           builder: (_podCtr) {

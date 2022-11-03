@@ -238,9 +238,7 @@ class _PodVideoController extends _PodBaseController {
         mainContext,
         PageRouteBuilder(
           fullscreenDialog: true,
-          pageBuilder: (BuildContext context, _, __) => FullScreenView(
-            tag: tag,
-          ),
+          pageBuilder: (BuildContext context, _, __) => FullScreenView(tag: tag),
           reverseTransitionDuration: const Duration(milliseconds: 400),
           transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(
             opacity: animation,

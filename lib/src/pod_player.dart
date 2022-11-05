@@ -205,8 +205,17 @@ class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStat
             );
           },
         ),
-        if(!_podCtr.isOverlayVisible)
-        _podCtr.logoBuilder?.call(_podCtr) ?? const SizedBox()
+        GetBuilder<PodGetXVideoController>(
+          tag: widget.controller.getTag,
+          id: 'overlay',
+          builder: (_) {
+            return Column(
+              children: [
+                if (!_.isOverlayVisible) _.logoBuilder?.call(_) ?? const SizedBox() else const SizedBox(),
+              ],
+            );
+          },
+        )
       ],
     );
   }

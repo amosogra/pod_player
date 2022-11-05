@@ -72,7 +72,8 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
                           child: _podCtr.videoCtr == null
                               ? circularProgressIndicator
                               : _podCtr.isPlayNextOverlayVisible
-                                  ? _podCtr.playNextOverlayBuilder?.call(_podCtr.isPlayNextOverlayVisible ? "Visible(FULL)" : "Invisible(FULL)") ?? circularProgressIndicator
+                                  ? _podCtr.playNextOverlayBuilder?.call(_podCtr.isPlayNextOverlayVisible ? "Visible(FULL)" : "Invisible(FULL)") ??
+                                      circularProgressIndicator
                                   : _podCtr.videoCtr!.value.isInitialized
                                       ? Stack(
                                           children: [
@@ -81,7 +82,17 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
                                               videoPlayerCtr: _podCtr.videoCtr!,
                                               videoAspectRatio: _podCtr.videoCtr?.value.aspectRatio ?? 16 / 9,
                                             ),
-                                            _podCtr.logoBuilder?.call(_podCtr) ?? const SizedBox()
+                                            GetBuilder<PodGetXVideoController>(
+                                              tag: widget.tag,
+                                              id: 'overlay',
+                                              builder: (_) {
+                                                return Column(
+                                                  children: [
+                                                    if (!_.isOverlayVisible) _.logoBuilder?.call(_) ?? const SizedBox() else const SizedBox(),
+                                                  ],
+                                                );
+                                              },
+                                            )
                                           ],
                                         )
                                       : circularProgressIndicator,

@@ -205,6 +205,7 @@ class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStat
             );
           },
         ),
+        if(!_podCtr.isOverlayVisible)
         _podCtr.logoBuilder?.call(_podCtr) ?? const SizedBox()
       ],
     );

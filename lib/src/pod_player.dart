@@ -166,57 +166,42 @@ class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStat
         ),
       ),
     );
-    return Stack(
-      children: [
-        GetBuilder<PodGetXVideoController>(
-          tag: widget.controller.getTag,
-          id: 'next-overlay',
-          builder: (_) {
-            _frameAspectRatio = widget.matchFrameAspectRatioToVideo ? _podCtr.videoCtr?.value.aspectRatio ?? widget.frameAspectRatio : widget.frameAspectRatio;
-            return Center(
-              child: ColoredBox(
-                color: widget.backgroundColor ?? Colors.black,
-                child: GetBuilder<PodGetXVideoController>(
-                  tag: widget.controller.getTag,
-                  id: 'errorState',
-                  builder: (_podCtr) {
-                    /// Check if has any error
-                    if (_podCtr.podVideoState == PodVideoState.error) {
-                      if (widget.onVideoError != null) {
-                        return widget.onVideoError!();
-                      }
-                      return _videoErrorWidget;
-                    }
-                    return AspectRatio(
-                      aspectRatio: _frameAspectRatio,
-                      child: Center(
-                        child: _podCtr.videoCtr == null
-                            ? circularProgressIndicator
-                            : _.isPlayNextOverlayVisible
-                                ? _.playNextOverlayBuilder?.call(_.isPlayNextOverlayVisible ? "Visible" : "Invisible") ?? circularProgressIndicator
-                                : _podCtr.videoCtr!.value.isInitialized
-                                    ? _buildPlayer()
-                                    : circularProgressIndicator,
-                      ),
-                    );
-                  },
-                ),
-              ),
-            );
-          },
-        ),
-        GetBuilder<PodGetXVideoController>(
-          tag: widget.controller.getTag,
-          id: 'overlay',
-          builder: (_) {
-            return Column(
-              children: [
-                if (!_.isOverlayVisible) _.logoBuilder?.call(_) ?? const SizedBox() else const SizedBox(),
-              ],
-            );
-          },
-        )
-      ],
+    return GetBuilder<PodGetXVideoController>(
+      tag: widget.controller.getTag,
+      id: 'next-overlay',
+      builder: (_) {
+        _frameAspectRatio = widget.matchFrameAspectRatioToVideo ? _podCtr.videoCtr?.value.aspectRatio ?? widget.frameAspectRatio : widget.frameAspectRatio;
+        return Center(
+          child: ColoredBox(
+            color: widget.backgroundColor ?? Colors.black,
+            child: GetBuilder<PodGetXVideoController>(
+              tag: widget.controller.getTag,
+              id: 'errorState',
+              builder: (_podCtr) {
+                /// Check if has any error
+                if (_podCtr.podVideoState == PodVideoState.error) {
+                  if (widget.onVideoError != null) {
+                    return widget.onVideoError!();
+                  }
+                  return _videoErrorWidget;
+                }
+                return AspectRatio(
+                  aspectRatio: _frameAspectRatio,
+                  child: Center(
+                    child: _podCtr.videoCtr == null
+                        ? circularProgressIndicator
+                        : _.isPlayNextOverlayVisible
+                            ? _.playNextOverlayBuilder?.call(_.isPlayNextOverlayVisible ? "Visible" : "Invisible") ?? circularProgressIndicator
+                            : _podCtr.videoCtr!.value.isInitialized
+                                ? _buildPlayer()
+                                : circularProgressIndicator,
+                  ),
+                );
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 
@@ -265,10 +250,25 @@ class _PodVideoPlayerState extends State<PodVideoPlayer> with TickerProviderStat
         },
       );
     } else {
-      return _PodCoreVideoPlayer(
-        videoPlayerCtr: _podCtr.videoCtr!,
-        videoAspectRatio: _videoAspectRatio,
-        tag: widget.controller.getTag,
+      return Stack(
+        children: [
+          _PodCoreVideoPlayer(
+            videoPlayerCtr: _podCtr.videoCtr!,
+            videoAspectRatio: _videoAspectRatio,
+            tag: widget.controller.getTag,
+          ),
+          GetBuilder<PodGetXVideoController>(
+            tag: widget.controller.getTag,
+            id: 'overlay',
+            builder: (_) {
+              return Stack(
+                children: [
+                  if (!_.isOverlayVisible) _.logoBuilder?.call(_) ?? const SizedBox() else const SizedBox(),
+                ],
+              );
+            },
+          )
+        ],
       );
     }
   }

@@ -33,6 +33,23 @@ class _PlayVideoFromAssetState extends State<PlayVideoFromAsset> {
       body: Center(
         child: PodVideoPlayer(
           controller: controller,
+          logoBuilder: (_) => const Positioned(
+            right: 10,
+            top: 8,
+            child: Text(
+              "Graviity Cloud",
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 14.5,
+                fontFamily: 'SFProText',
+                fontWeight: FontWeight.w500,
+                fontStyle: FontStyle.italic,
+                height: 1.25,
+              ),
+            ),
+          ),
           podPlayerLabels: const PodPlayerLabels(
             play: "PLAY",
             pause: "PAUSE",

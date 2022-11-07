@@ -86,7 +86,7 @@ class _FullScreenViewState extends State<FullScreenView> with TickerProviderStat
                                               tag: widget.tag,
                                               id: 'overlay',
                                               builder: (_) {
-                                                return Column(
+                                                return Stack(
                                                   children: [
                                                     if (!_.isOverlayVisible) _.logoBuilder?.call(_) ?? const SizedBox() else const SizedBox(),
                                                   ],
